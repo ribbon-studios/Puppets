@@ -1,0 +1,22 @@
+[
+    {
+      "Author": "cecilia-sanare",
+      "Name": "Puppets",
+      "Description": "Enables you to easily and automatically sync emotes via party chat and linkshells!",
+      "Punchline": "Simple emote syncing!",
+      "Tags": [ "Emote", "Syncing" ],
+      "InternalName": "Puppets",
+      "AssemblyVersion": "1.0.3.1",
+      "TestingAssemblyVersion": "1.0.3.2",
+      "RepoUrl": "https://github.com/cecilia-sanare/Puppets",
+      "ApplicableVersion": "any",
+      "DalamudApiLevel": 6,
+      "IsHide": "False",
+      "IsTestingExclusive": "False",
+      "DownloadCount": 1,
+      "LastUpdate": 1618608321,
+      "DownloadLinkInstall": "https://github.com/cecilia-sanare/Puppets/raw/main/Puppets.zip",
+      "DownloadLinkTesting": "https://github.com/cecilia-sanare/Puppets/raw/main/Puppets.zip",
+      "DownloadLinkUpdate": "https://github.com/cecilia-sanare/Puppets/raw/main/Puppets.zip"
+    }
+  ]

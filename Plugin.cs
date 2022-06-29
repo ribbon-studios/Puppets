@@ -25,7 +25,6 @@ namespace SamplePlugin
         public CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public ChatGui ChatGui { get; init; }
-        public ClientState ClientState { get; init; }
         public XivCommonBase Common { get; init; }
         private PluginUI PluginUi { get; init; }
 
@@ -33,15 +32,13 @@ namespace SamplePlugin
             PartyList partyList,
             DalamudPluginInterface pluginInterface,
             CommandManager commandManager,
-            ChatGui chatGui,
-            ClientState clientState
+            ChatGui chatGui
         )
         {
             this.PartyList = partyList;
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
             this.ChatGui = chatGui;
-            this.ClientState = clientState;
             this.Common = new XivCommonBase(Hooks.None);
             
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();

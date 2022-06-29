@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Authors>cecilia-sanare</Authors>
-		<Version>1.0</Version>
+		<Version>1.0.1</Version>
 		<Description>Simple emote syncing!</Description>
 		<Copyright></Copyright>
 		<PackageProjectUrl>https://github.com/cecilia-sanare/Puppets</PackageProjectUrl>
@@ -17,6 +17,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -33,39 +34,36 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+		<DalamudPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudPath>
 		<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="DalamudLinter" Version="1.0.3" />
 		<PackageReference Include="DalamudPackager" Version="2.1.7" />
 		<PackageReference Include="XivCommon" Version="5.0.0" />
 		<Reference Include="FFXIVClientStructs">
-			<HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
+			<HintPath>$(DalamudPath)FFXIVClientStructs.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Newtonsoft.Json">
-			<HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
+			<HintPath>$(DalamudPath)Newtonsoft.Json.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Dalamud">
-			<HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
+			<HintPath>$(DalamudPath)Dalamud.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="ImGui.NET">
-			<HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
-		<Reference Include="ImGuiScene">
-			<HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
+			<HintPath>$(DalamudPath)ImGui.NET.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Lumina">
-			<HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
+			<HintPath>$(DalamudPath)Lumina.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 		<Reference Include="Lumina.Excel">
-			<HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
+			<HintPath>$(DalamudPath)Lumina.Excel.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
 	</ItemGroup>
@@ -74,8 +72,10 @@
 		<None Remove=".gitignore" />
 		<None Remove="README.md" />
 	</ItemGroup>
-
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="if $(Configuration) == Release powershell Compress-Archive -Force $(TargetPath), $(TargetDir)$(SolutionName).json $(ProjectDir)$(SolutionName).zip" />
+	
+	<Target Name="DalamudLinter" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+		<DalamudLinter
+                ProjectDir="$(ProjectDir)"
+                ProjectFilePath="$(MSBuildProjectFullPath)"/>
 	</Target>
 </Project>

@@ -6,7 +6,7 @@
   "Punchline": "Simple emote syncing!",
   "Tags": [ "Emote", "Syncing" ],
   "InternalName": "Puppets",
-  "AssemblyVersion": "1.0.3.2",
+  "AssemblyVersion": "1.0.0",
   "ApplicableVersion": "any",
   "DalamudApiLevel": 6
 }

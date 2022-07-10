@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Puppets.Puppets
+namespace Puppets.Utils
 {
     public static class Emotes
     {
@@ -10,7 +10,8 @@ namespace Puppets.Puppets
             "playdead",
             "cheeron",
             "cheerwave",
-            "cheerjump"
+            "cheerjump",
+            "beesknees"
         };
 
         public static bool isValidEmote(string emote)

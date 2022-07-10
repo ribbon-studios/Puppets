@@ -8,10 +8,11 @@ using System;
 using System.Linq;
 using XivCommon;
 using System.Threading.Tasks;
-using Puppets.Puppets;
+using Puppets.Utils;
 using Dalamud.Game.ClientState;
+using Newtonsoft.Json;
 
-namespace SamplePlugin
+namespace Puppets
 {
     public sealed class Plugin : IDalamudPlugin
     {
@@ -20,6 +21,7 @@ namespace SamplePlugin
         private const string SettingsCommand = "/puppets";
         private const string PuppetMasterCommand = "/pm";
 
+        public ClientState ClientState { get; init; }
         public PartyList PartyList { get; init; }
         public DalamudPluginInterface PluginInterface { get; init; }
         public CommandManager CommandManager { get; init; }
@@ -27,14 +29,17 @@ namespace SamplePlugin
         public ChatGui ChatGui { get; init; }
         public XivCommonBase Common { get; init; }
         private PluginUI PluginUi { get; init; }
+        public CharacterUtils CharacterUtils { get; init; }
 
         public Plugin(
+            ClientState clientState,
             PartyList partyList,
             DalamudPluginInterface pluginInterface,
             CommandManager commandManager,
             ChatGui chatGui
         )
         {
+            this.ClientState = clientState;
             this.PartyList = partyList;
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
@@ -45,7 +50,8 @@ namespace SamplePlugin
             this.Configuration.Initialize(this);
 
             // you might normally want to embed resources and load them from the manifest stream
-            this.PluginUi = new PluginUI(this.Configuration, this.PluginInterface);
+            this.PluginUi = new PluginUI(this);
+            this.CharacterUtils = new CharacterUtils(this);
 
             this.CommandManager.AddHandler(SettingsCommand, new CommandInfo(OnCommand)
             {
@@ -65,7 +71,7 @@ namespace SamplePlugin
         private void OnChat(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
         {
             if (
-                (!Configuration.DebugMode && !sender.TextValue.Contains(Configuration.Owner)) ||
+                (!Configuration.DebugMode && this.CharacterUtils.Owner != null && !sender.TextValue.Contains(this.CharacterUtils.Owner.Name.TextValue)) ||
                 (Configuration.DebugMode && type != XivChatType.Echo) ||
                 (!Configuration.DebugMode && type != XivChatType.Party && type != XivChatType.CrossParty) ||
                 !message.TextValue.StartsWith("[PM] ")

@@ -11,7 +11,10 @@ namespace Puppets.Utils
             "cheeron",
             "cheerwave",
             "cheerjump",
-            "beesknees"
+            "beesknees",
+            "thavdance",
+            "golddance",
+            "dote"
         };
 
         public static bool isValidEmote(string emote)

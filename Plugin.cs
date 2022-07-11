@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 using Puppets.Utils;
 using Dalamud.Game.ClientState;
 using Newtonsoft.Json;
+using Dalamud.IoC;
+using Dalamud.Data;
+using Dalamud.Game;
 
 namespace Puppets
 {
@@ -21,57 +24,55 @@ namespace Puppets
         private const string SettingsCommand = "/puppets";
         private const string PuppetMasterCommand = "/pm";
 
-        public ClientState ClientState { get; init; }
-        public PartyList PartyList { get; init; }
-        public DalamudPluginInterface PluginInterface { get; init; }
-        public CommandManager CommandManager { get; init; }
-        public Configuration Configuration { get; init; }
-        public ChatGui ChatGui { get; init; }
+        [PluginService] public static DataManager Data { get; private set; }
+        [PluginService] public static ClientState ClientState { get; private set; }
+        [PluginService] public static PartyList PartyList { get; private set; }
+        [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; }
+        [PluginService] public static CommandManager CommandManager { get; private set; }
+        [PluginService] public static ChatGui ChatGui { get; private set; }
+        [PluginService] public static SigScanner TargetScanner { get; private set; }
+
+        private static Configuration? _configuration;
+        public static Configuration Configuration { 
+            get
+            {
+                if (Plugin._configuration == null)
+                {
+                    Plugin._configuration = Plugin.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+                }
+
+                return Plugin._configuration;
+            } 
+        }
         public XivCommonBase Common { get; init; }
         private PluginUI PluginUi { get; init; }
-        public CharacterUtils CharacterUtils { get; init; }
 
-        public Plugin(
-            ClientState clientState,
-            PartyList partyList,
-            DalamudPluginInterface pluginInterface,
-            CommandManager commandManager,
-            ChatGui chatGui
-        )
+        public Plugin()
         {
-            this.ClientState = clientState;
-            this.PartyList = partyList;
-            this.PluginInterface = pluginInterface;
-            this.CommandManager = commandManager;
-            this.ChatGui = chatGui;
             this.Common = new XivCommonBase(Hooks.None);
-            
-            this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            this.Configuration.Initialize(this);
 
             // you might normally want to embed resources and load them from the manifest stream
-            this.PluginUi = new PluginUI(this);
-            this.CharacterUtils = new CharacterUtils(this);
+            this.PluginUi = new PluginUI();
 
-            this.CommandManager.AddHandler(SettingsCommand, new CommandInfo(OnCommand)
+            Plugin.CommandManager.AddHandler(SettingsCommand, new CommandInfo(OnCommand)
             {
                 HelpMessage = "open configuration window"
             });
 
-            this.CommandManager.AddHandler(PuppetMasterCommand, new CommandInfo(OnPuppetMasterCommand)
+            Plugin.CommandManager.AddHandler(PuppetMasterCommand, new CommandInfo(OnPuppetMasterCommand)
             {
                 HelpMessage = "Use with /{emote} [delay] to sync a specific emote"
             });
 
-            this.PluginInterface.UiBuilder.Draw += DrawUI;
-            this.PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
-            this.ChatGui.ChatMessage += OnChat;
+            Plugin.PluginInterface.UiBuilder.Draw += DrawUI;
+            Plugin.PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
+            Plugin.ChatGui.ChatMessage += OnChat;
         }
 
         private void OnChat(XivChatType type, uint senderId, ref SeString sender, ref SeString message, ref bool isHandled)
         {
             if (
-                (!Configuration.DebugMode && this.CharacterUtils.Owner != null && !sender.TextValue.Contains(this.CharacterUtils.Owner.Name.TextValue)) ||
+                (!Configuration.DebugMode && CharacterUtils.Owner != null && !sender.TextValue.Contains(CharacterUtils.Owner.Name.TextValue)) ||
                 (Configuration.DebugMode && type != XivChatType.Echo) ||
                 (!Configuration.DebugMode && type != XivChatType.Party && type != XivChatType.CrossParty) ||
                 !message.TextValue.StartsWith("[PM] ")
@@ -83,7 +84,7 @@ namespace Puppets
             string[] command = message.TextValue.Split(" ");
             string emote = command[1];
 
-            if (Emotes.isNotValidEmote(emote)) return;
+            if (Emotes.isNotUnlockedEmote(emote)) return;
 
             var when = command.Length > 3 ? DateTime.Parse(string.Join(" ", command.Skip(3).ToArray())) : DateTime.Now.ToUniversalTime();
 
@@ -97,9 +98,9 @@ namespace Puppets
         {
             this.Common.Dispose();
             this.PluginUi.Dispose();
-            this.CommandManager.RemoveHandler(SettingsCommand);
-            this.CommandManager.RemoveHandler(PuppetMasterCommand);
-            this.ChatGui.ChatMessage -= OnChat;
+            Plugin.CommandManager.RemoveHandler(SettingsCommand);
+            Plugin.CommandManager.RemoveHandler(PuppetMasterCommand);
+            Plugin.ChatGui.ChatMessage -= OnChat;
         }
 
         private void OnCommand(string command, string args)
@@ -112,7 +113,7 @@ namespace Puppets
             string[] arguments = args.Split(" ").Where((arg) => arg != "").ToArray();
             var emote = arguments[0];
 
-            if (Emotes.isValidEmote(emote)) 
+            if (Emotes.isUnlockedEmote(emote)) 
             {
                 var delay = arguments[1];
                 var when = DateTime.Now.AddSeconds(double.Parse(delay)).ToUniversalTime();
@@ -128,7 +129,7 @@ namespace Puppets
             } 
             else
             {
-                this.PluginInterface.UiBuilder.AddNotification("The provided emote is not allowed (" + emote + ")", "Puppet Control Error", Dalamud.Interface.Internal.Notifications.NotificationType.Error);
+                Plugin.PluginInterface.UiBuilder.AddNotification("The provided emote is not allowed (" + emote + ")", "Puppet Control Error", Dalamud.Interface.Internal.Notifications.NotificationType.Error);
             }
 
         }

@@ -5,36 +5,29 @@ namespace Puppets.Utils
 {
     public class CharacterUtils
     {
-        public Puppet? Player
+        public static Puppet? Player
         {
             get
             {
-                return this.plugin.ClientState.LocalPlayer == null ? null : new Puppet(this.plugin.ClientState.LocalPlayer);
+                return Plugin.ClientState.LocalPlayer == null ? null : new Puppet(Plugin.ClientState.LocalPlayer);
             }
         }
 
-        public Puppet? Owner
+        public static Puppet? Owner
         {
             get
             {
-                if (!this.plugin.Configuration.Enabled) return null;
+                if (!Plugin.Configuration.Enabled) return null;
 
-                var partyLeader = this.plugin.PartyList[Convert.ToInt32(this.plugin.PartyList.PartyLeaderIndex)];
+                var partyLeader = Plugin.PartyList[Convert.ToInt32(Plugin.PartyList.PartyLeaderIndex)];
 
                 if (partyLeader == null)
                 {
-                    return this.Player;
+                    return CharacterUtils.Player;
                 }
 
                 return new Puppet(partyLeader);
             }
-        }
-
-        private Plugin plugin;
-
-        public CharacterUtils(Plugin plugin)
-        {
-            this.plugin = plugin;
         }
     }
 }

@@ -12,19 +12,9 @@ namespace Puppets
 
         public bool DebugMode { get; set; } = false;
 
-        // the below exist just to make saving less cumbersome
-
-        [NonSerialized]
-        private Plugin plugin;
-
-        public void Initialize(Plugin plugin)
-        {
-            this.plugin = plugin;
-        }
-
         public void Save()
         {
-            this.plugin.PluginInterface.SavePluginConfig(this);
+            Plugin.PluginInterface.SavePluginConfig(this);
         }
     }
 }

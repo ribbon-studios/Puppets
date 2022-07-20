@@ -1,4 +1,5 @@
-﻿using Puppets.Models;
+﻿using Dalamud.Logging;
+using Puppets.Models;
 using System;
 
 namespace Puppets.Utils
@@ -19,7 +20,7 @@ namespace Puppets.Utils
             {
                 if (!Plugin.Configuration.Enabled) return null;
 
-                var partyLeader = Plugin.PartyList[Convert.ToInt32(Plugin.PartyList.PartyLeaderIndex)];
+                var partyLeader = Plugin.PartyList.Length == 0 ? null : Plugin.PartyList[Convert.ToInt32(Plugin.PartyList.PartyLeaderIndex)];
 
                 if (partyLeader == null)
                 {

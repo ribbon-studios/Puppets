@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Lumina.Excel.GeneratedSheets;
-using Dalamud.Data;
 using System.Linq;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Dalamud.Logging;
 using System.Runtime.InteropServices;
+using Puppets.Models;
 
 namespace Puppets.Utils
 {
@@ -31,32 +31,52 @@ namespace Puppets.Utils
             }
         }
 
-        private static List<string> UnlockedEmotes
+        private static List<SearchableEmote>? _emotes;
+        private static List<SearchableEmote> ValidEmotes
         {
             get
             {
-                var emotes = new List<string>();
-
-                foreach (var emote in Plugin.Data.GetExcelSheet<Emote>()!.Where(x => x.Order != 0 && Emotes.isEmoteUnlocked(x)))
+                if (Emotes._emotes == null)
                 {
-                    emotes.Add(emote.TextCommand.Value!.Command.RawString.Replace("/", ""));
+                    Emotes._emotes = new List<SearchableEmote>();
+
+                    foreach (var emote in Plugin.Data.GetExcelSheet<Emote>()!.Where(x => x.Order != 0))
+                    {
+                        Emotes._emotes.Add(new SearchableEmote(emote));
+                    }
                 }
 
-                return emotes;
+                return _emotes;
             }
+        }
+
+        private static List<SearchableEmote> UnlockedEmotes => Emotes.ValidEmotes.Where(x => Emotes.isEmoteUnlocked(x)).ToList();
+
+        public static bool isValidEmote(string emote)
+        {
+            var lowercaseEmote = emote.ToLower();
+
+            return Emotes.ValidEmotes.Find(searchableEmote => searchableEmote.Equals(lowercaseEmote)) != null;
+        }
+
+        public static bool isInvalidEmote(string emote)
+        {
+            return !Emotes.isValidEmote(emote);
         }
 
         public static bool isUnlockedEmote(string emote)
         {
-            return UnlockedEmotes.Contains(emote.ToLower());
+            var lowercaseEmote = emote.ToLower();
+
+            return Emotes.UnlockedEmotes.Find(searchableEmote => searchableEmote.Equals(lowercaseEmote)) != null;
         }
 
         public static bool isNotUnlockedEmote(string emote)
         {
-            return !isUnlockedEmote(emote);
+            return !Emotes.isUnlockedEmote(emote);
         }
 
-        private static bool isEmoteUnlocked(Emote emote)
+        private static bool isEmoteUnlocked(SearchableEmote emote)
         {
             return emote.UnlockLink == 0 || Emotes._isEmoteUnlocked(UIState.Instance(), emote.UnlockLink, 1) > 0;
         }

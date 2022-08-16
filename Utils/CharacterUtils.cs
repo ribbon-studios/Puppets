@@ -30,5 +30,10 @@ namespace Puppets.Utils
                 return new Puppet(partyLeader);
             }
         }
+
+        public static bool InParty => Plugin.PartyList.Length > 0;
+        public static bool NotInParty => !CharacterUtils.InParty;
+        public static bool IsOwner => CharacterUtils.Player.Equals(CharacterUtils.Owner);
+        public static bool IsNotOwner => !CharacterUtils.IsOwner;
     }
 }

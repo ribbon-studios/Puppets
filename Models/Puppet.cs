@@ -3,10 +3,11 @@ using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.ClientState.Resolvers;
 using Dalamud.Game.Text.SeStringHandling;
 using Lumina.Excel.GeneratedSheets;
+using System;
 
 namespace Puppets.Models
 {
-    public class Puppet
+    public class Puppet : IEquatable<Puppet>
     {
         public string ID
         {
@@ -38,9 +39,25 @@ namespace Puppets.Models
             this.HomeWorld = partyMember.World;
         }
 
-        public bool Equals(Puppet other)
+        public Puppet(string sender)
         {
-            return this.ID.Equals(other.ID);
+            this.Name = sender;
+        }
+
+        public bool Equals(Puppet? other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return this.HomeWorld.Id == other.HomeWorld.Id &&
+                this.Name.TextValue == other.Name.TextValue;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Puppet) obj);
         }
     }
 }

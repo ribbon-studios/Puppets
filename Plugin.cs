@@ -110,12 +110,28 @@ namespace Puppets
 
         private void OnPuppetMasterCommand(string command, string args)
         {
-            string[] arguments = args.Split(" ").Where((arg) => arg != "").ToArray();
+            string[] arguments = ChatUtils.ReplaceCharacterAtStart(ChatUtils.Cleanup(args), "/").Split(" ").Where((arg) => arg != "").ToArray();
             var emote = arguments[0];
 
-            if (Emotes.isUnlockedEmote(emote)) 
+            if (CharacterUtils.IsNotOwner)
             {
-                var delay = arguments[1];
+                Plugin.PluginInterface.UiBuilder.AddNotification("Only a puppet master may execute emotes!", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
+            }
+            else if (Emotes.isInvalidEmote(emote))
+            {
+                Plugin.PluginInterface.UiBuilder.AddNotification("The provided emote does not exist (" + emote + ")", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Error);
+            }
+            else if (Emotes.isNotUnlockedEmote(emote))
+            {
+                Plugin.PluginInterface.UiBuilder.AddNotification("The provided emote is not unlocked (" + emote + ")", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
+            }
+            else if (!Configuration.DebugMode && CharacterUtils.NotInParty)
+            {
+                Plugin.PluginInterface.UiBuilder.AddNotification("You must be in a party to use puppets!", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
+            }
+            else
+            {
+                var delay = arguments.Length >= 2 ? arguments[1] : "1";
                 var when = DateTime.Now.AddSeconds(double.Parse(delay)).ToUniversalTime();
 
                 if (Configuration.DebugMode)
@@ -126,10 +142,6 @@ namespace Puppets
                 {
                     this.Common.Functions.Chat.SendMessage("/p [PM] " + emote + " @ " + when.ToString());
                 }
-            } 
-            else
-            {
-                Plugin.PluginInterface.UiBuilder.AddNotification("The provided emote is not allowed (" + emote + ")", "Puppet Control Error", Dalamud.Interface.Internal.Notifications.NotificationType.Error);
             }
 
         }

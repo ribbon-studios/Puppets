@@ -1,6 +1,5 @@
-﻿using Dalamud.Game.ClientState.Party;
-using Dalamud.Plugin;
-using ImGuiNET;
+﻿using ImGuiNET;
+using Puppets.Constants;
 using Puppets.Models;
 using Puppets.Utils;
 using System;
@@ -42,33 +41,34 @@ namespace Puppets
             if (ImGui.Begin("Puppets Config", ref this.visible, ImGuiWindowFlags.NoCollapse))
             {
                 // can't ref a property, so use a local copy
-                var enabled = Plugin.Configuration.Enabled;
+                var enabled = PuppetsPlugin.Configuration.Enabled;
                 if (ImGui.Checkbox("Enabled", ref enabled))
                 {
-                    Plugin.Configuration.Enabled = enabled;
+                    PuppetsPlugin.Configuration.Enabled = enabled;
                     // can save immediately on change, if you don't want to provide a "Save and Close" button
-                    Plugin.Configuration.Save();
+                    PuppetsPlugin.Configuration.Save();
                 }
 
                 ImGui.Text("Current Owner: " + CharacterUtils.Owner?.ID);
 
-                var debugMode = Plugin.Configuration.DebugMode;
-                if (ImGui.Checkbox("Debug Mode", ref debugMode))
+                var modes = System.Enum.GetNames(typeof(DebugMode));
+                var debugMode = (int)PuppetsPlugin.Configuration.DebugMode;
+                if (ImGui.Combo("Debug Mode", ref debugMode, modes, modes.Length))
                 {
-                    Plugin.Configuration.DebugMode = debugMode;
+                    PuppetsPlugin.Configuration.DebugMode = (DebugMode)debugMode;
                     // can save immediately on change, if you don't want to provide a "Save and Close" button
-                    Plugin.Configuration.Save();
+                    PuppetsPlugin.Configuration.Save();
                 }
 
-                if (Plugin.Configuration.DebugMode)
+                if (PuppetsPlugin.Configuration.DebugMode is not DebugMode.None)
                 {
-                    ImGui.Text("Current Player: " + Plugin.ClientState.LocalPlayer?.Name);
-                    ImGui.Text("Party Length: " + Plugin.PartyList.Length);
-                    ImGui.Text("Party Leader: " + Plugin.PartyList.PartyLeaderIndex);
+                    ImGui.Text("Current Player: " + PuppetsPlugin.ClientState.LocalPlayer?.Name);
+                    ImGui.Text("Party Length: " + PuppetsPlugin.PartyList.Length);
+                    ImGui.Text("Party Leader: " + PuppetsPlugin.PartyList.PartyLeaderIndex);
 
-                    for (var i = 0; i < Plugin.PartyList.Length; i++)
+                    for (var i = 0; i < PuppetsPlugin.PartyList.Length; i++)
                     {
-                        var partyMember = Plugin.PartyList[i];
+                        var partyMember = PuppetsPlugin.PartyList[i];
                         if (partyMember == null) continue;
 
                         ImGui.Text("[" + i + "]: " + new Puppet(partyMember).ID);

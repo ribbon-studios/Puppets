@@ -1,0 +1,36 @@
+name: build and test
+
+# TODO: Figure out how to pull Dalamud Assets into GitHub Actions
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+#     paths:
+#     - '**.cs'
+#     - '**.csproj'
+
+env:
+  DOTNET_VERSION: '5.x.x' # The .NET SDK version to use
+
+jobs:
+  build-and-test:
+
+    name: build-and-test
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Install dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build /nodeReuse:false -nologo -clp:NoSummary --verbosity quiet
+    
+    - name: Test
+      run: dotnet test --no-restore --verbosity quiet

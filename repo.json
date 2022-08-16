@@ -6,17 +6,15 @@
     "Punchline": "Simple emote syncing!",
     "Tags": [ "Emote", "Syncing" ],
     "InternalName": "Puppets",
-    "AssemblyVersion": "1.1.0.2",
-    "TestingAssemblyVersion": "1.1.0.2",
+    "AssemblyVersion": "1.1.0.4",
+    "TestingAssemblyVersion": "1.1.0.4",
     "RepoUrl": "https://github.com/cecilia-sanare/Puppets",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 6,
     "IsHide": "False",
     "IsTestingExclusive": "False",
-    "DownloadCount": 1,
-    "LastUpdate": 1618608321,
-    "DownloadLinkInstall": "https://github.com/cecilia-sanare/Puppets/raw/main/Puppets.zip",
-    "DownloadLinkTesting": "https://github.com/cecilia-sanare/Puppets/raw/main/Puppets.zip",
-    "DownloadLinkUpdate": "https://github.com/cecilia-sanare/Puppets/raw/main/Puppets.zip"
+    "DownloadLinkInstall": "https://github.com/cecilia-sanare/Puppets/raw/testing/!Dist/latest.zip",
+    "DownloadLinkTesting": "https://github.com/cecilia-sanare/Puppets/raw/testing/!Dist/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/cecilia-sanare/Puppets/raw/testing/!Dist/latest.zip"
   }
 ]

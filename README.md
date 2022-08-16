@@ -1,3 +1,5 @@
+**⚠️ NOTICE: Use this plugin at your own risk, this is still incredibly WIP!! ⚠️**
+
 # Puppets
 
 Simple emote syncing via Party Chat!

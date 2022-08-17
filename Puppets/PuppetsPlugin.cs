@@ -10,6 +10,8 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Puppets.Constants;
 using Puppets.Models;
+using Puppets.SeFunctions;
+using Puppets.Time;
 using Puppets.Utils;
 using System;
 using System.Linq;
@@ -87,15 +89,13 @@ namespace Puppets
                 return;
             }
 
-            PuppetsPlugin.PluginInterface.UiBuilder.AddNotification($"{message.TextValue}", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
-
             string[] command = message.TextValue.Split(" ");
             string emote = command[1];
 
             if (Emotes.isNotUnlockedEmote(emote)) return;
 
             var dateString = string.Join(" ", command.Skip(3).ToArray());
-            var when = command.Length > 3 ? DateUtils.Parse(dateString) : SystemTime.NowUTC();
+            var when = command.Length > 3 ? new(dateString) : SeTime.GetServerTime();
 
             if (Configuration.Enabled)
             {
@@ -141,8 +141,8 @@ namespace Puppets
             else
             {
                 var delay = arguments.Length >= 2 ? arguments[1] : "1";
-                var when = SystemTime.NowUTC().AddSeconds(double.Parse(delay)).ToUniversalTime();
-                var message = $"[PM] {emote} @ {DateUtils.ToString(when)}";
+                var when = SeTime.GetServerTime().AddMilliseconds((long) double.Parse(delay) * 1000);
+                var message = $"[PM] {emote} @ {when}";
 
                 if (Configuration.DebugMode is DebugMode.Echo or DebugMode.EchoNoEmote)
                 {
@@ -156,11 +156,11 @@ namespace Puppets
 
         }
 
-        private void Emote(string emote, DateTime when)
+        private void Emote(string emote, TimeStamp when)
         {
             Task.Run(async () =>
             {
-                TimeSpan delay = DateUtils.TimeTill(when);
+                long delay = when - SeTime.GetServerTime();
 
                 #if DEBUG
                 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -168,12 +168,12 @@ namespace Puppets
                 {
                     await Task.Delay(1000);
 
-                    this.Common.Functions.Chat.SendMessage($"/e '{DateUtils.ToString(when)}': '{delay.ToString()}'");
+                    this.Common.Functions.Chat.SendMessage($"/e '{when}': '{delay}'");
                 });
                 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 #endif
 
-                if (delay.TotalMilliseconds > 0) await Task.Delay((int)delay.TotalMilliseconds);
+                if (delay > 0) await Task.Delay((int)delay);
 
                 if (Configuration.DebugMode is DebugMode.None or DebugMode.Echo)
                 {

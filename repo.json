@@ -13,8 +13,8 @@
     "DalamudApiLevel": 6,
     "IsHide": "False",
     "IsTestingExclusive": "False",
-    "DownloadLinkInstall": "https://github.com/cecilia-sanare/Puppets/raw/testing/!Dist/latest.zip",
-    "DownloadLinkTesting": "https://github.com/cecilia-sanare/Puppets/raw/testing/!Dist/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/cecilia-sanare/Puppets/raw/testing/!Dist/latest.zip"
+    "DownloadLinkInstall": "https://github.com/cecilia-sanare/Puppets/raw/main/!Dist/latest.zip",
+    "DownloadLinkTesting": "https://github.com/cecilia-sanare/Puppets/raw/main/!Dist/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/cecilia-sanare/Puppets/raw/main/!Dist/latest.zip"
   }
 ]

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Lumina.Excel.GeneratedSheets;
-using System.Linq;
+﻿using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using Dalamud.Logging;
-using System.Runtime.InteropServices;
+using Lumina.Excel.GeneratedSheets;
 using Puppets.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Puppets.Utils
 {
@@ -14,13 +14,13 @@ namespace Puppets.Utils
         private delegate byte IsEmoteUnlockedDelegate(UIState* uiState, uint emoteId, byte unk);
 
         private static IsEmoteUnlockedDelegate? __isEmoteUnlocked;
-        private static IsEmoteUnlockedDelegate _isEmoteUnlocked
+        private static IsEmoteUnlockedDelegate? _isEmoteUnlocked
         {
             get
             {
                 if (Emotes.__isEmoteUnlocked == null)
                 {
-                    if (Plugin.TargetScanner.TryScanText("E8 ?? ?? ?? ?? 84 C0 74 A4", out var emoteUnlockedPtr))
+                    if (PuppetsPlugin.TargetScanner.TryScanText("E8 ?? ?? ?? ?? 84 C0 74 A4", out var emoteUnlockedPtr))
                     {
                         PluginLog.Information($"emoteUnlockedPtr: {emoteUnlockedPtr:X}");
                         Emotes.__isEmoteUnlocked = Marshal.GetDelegateForFunctionPointer<IsEmoteUnlockedDelegate>(emoteUnlockedPtr);
@@ -40,13 +40,13 @@ namespace Puppets.Utils
                 {
                     Emotes._emotes = new List<SearchableEmote>();
 
-                    foreach (var emote in Plugin.Data.GetExcelSheet<Emote>()!.Where(x => x.Order != 0))
+                    foreach (var emote in PuppetsPlugin.Data.GetExcelSheet<Emote>()!.Where(x => x.Order != 0))
                     {
                         Emotes._emotes.Add(new SearchableEmote(emote));
                     }
                 }
 
-                return _emotes;
+                return Emotes._emotes;
             }
         }
 
@@ -78,7 +78,7 @@ namespace Puppets.Utils
 
         private static bool isEmoteUnlocked(SearchableEmote emote)
         {
-            return emote.UnlockLink == 0 || Emotes._isEmoteUnlocked(UIState.Instance(), emote.UnlockLink, 1) > 0;
+            return emote.UnlockLink == 0 || Emotes._isEmoteUnlocked != null && Emotes._isEmoteUnlocked(UIState.Instance(), emote.UnlockLink, 1) > 0;
         }
     }
 }

@@ -39,12 +39,14 @@ namespace Puppets.Models
                 this.ShortAlias.Contains(command);
         }
 
-        public bool Equals(object? obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((SearchableEmote) obj);
+            return Equals((SearchableEmote)obj);
         }
+
+        public override int GetHashCode() => (this.Command, this.ShortCommand, this.Alias, this.ShortAlias).GetHashCode();
     }
 }

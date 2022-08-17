@@ -1,4 +1,5 @@
 ﻿using Dalamud.Configuration;
+using Puppets.Constants;
 using System;
 
 namespace Puppets
@@ -10,11 +11,12 @@ namespace Puppets
 
         public bool Enabled { get; set; } = true;
 
-        public bool DebugMode { get; set; } = false;
+        public DebugMode DebugMode { get; set; } = DebugMode.None;
 
         public void Save()
         {
-            Plugin.PluginInterface.SavePluginConfig(this);
+            PuppetsPlugin.PluginInterface.SavePluginConfig(this);
         }
+
     }
 }

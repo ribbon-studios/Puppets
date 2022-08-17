@@ -1,5 +1,4 @@
-﻿using Dalamud.Logging;
-using Puppets.Models;
+﻿using Puppets.Models;
 using System;
 
 namespace Puppets.Utils
@@ -10,7 +9,7 @@ namespace Puppets.Utils
         {
             get
             {
-                return Plugin.ClientState.LocalPlayer == null ? null : new Puppet(Plugin.ClientState.LocalPlayer);
+                return PuppetsPlugin.ClientState.LocalPlayer == null ? null : new Puppet(PuppetsPlugin.ClientState.LocalPlayer);
             }
         }
 
@@ -18,9 +17,9 @@ namespace Puppets.Utils
         {
             get
             {
-                if (!Plugin.Configuration.Enabled) return null;
+                if (!PuppetsPlugin.Configuration.Enabled) return null;
 
-                var partyLeader = Plugin.PartyList.Length == 0 ? null : Plugin.PartyList[Convert.ToInt32(Plugin.PartyList.PartyLeaderIndex)];
+                var partyLeader = PuppetsPlugin.PartyList.Length == 0 ? null : PuppetsPlugin.PartyList[Convert.ToInt32(PuppetsPlugin.PartyList.PartyLeaderIndex)];
 
                 if (partyLeader == null)
                 {
@@ -31,9 +30,9 @@ namespace Puppets.Utils
             }
         }
 
-        public static bool InParty => Plugin.PartyList.Length > 0;
+        public static bool InParty => PuppetsPlugin.PartyList.Length > 0;
         public static bool NotInParty => !CharacterUtils.InParty;
-        public static bool IsOwner => CharacterUtils.Player.Equals(CharacterUtils.Owner);
+        public static bool IsOwner => CharacterUtils.Player != null && CharacterUtils.Player.Equals(CharacterUtils.Owner);
         public static bool IsNotOwner => !CharacterUtils.IsOwner;
     }
 }

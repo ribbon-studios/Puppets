@@ -1,8 +1,5 @@
 ﻿using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Party;
-using Dalamud.Game.ClientState.Resolvers;
-using Dalamud.Game.Text.SeStringHandling;
-using Lumina.Excel.GeneratedSheets;
 using System;
 
 namespace Puppets.Models
@@ -13,43 +10,45 @@ namespace Puppets.Models
         {
             get
             {
-                var id = this.Name.TextValue;
+                var id = this.Name;
 
-                if (this.HomeWorld.GameData != null)
+                if (this.HomeWorld != null)
                 {
-                    id += " (" + this.HomeWorld.GameData.Name + ")";
+                    id += " (" + this.HomeWorld + ")";
                 }
 
                 return id;
             }
         }
 
-        public SeString Name { get; init; }
-        public ExcelResolver<World> HomeWorld { get; init; }
+        public string Name { get; init; }
+        public string? HomeWorld { get; init; }
 
         public Puppet(PlayerCharacter character)
         {
-            this.Name = character.Name;
-            this.HomeWorld = character.HomeWorld;
+            this.Name = character.Name.TextValue;
+            this.HomeWorld = character.HomeWorld.GameData?.Name.ToString();
         }
 
         public Puppet(PartyMember partyMember)
         {
-            this.Name = partyMember.Name;
-            this.HomeWorld = partyMember.World;
+            this.Name = partyMember.Name.TextValue;
+            this.HomeWorld = partyMember.World?.GameData?.Name.ToString();
         }
 
         public Puppet(string sender)
         {
             this.Name = sender;
+            this.HomeWorld = PuppetsPlugin.ClientState.LocalPlayer?.CurrentWorld.GameData?.Name.ToString()
+                             ?? PuppetsPlugin.ClientState.LocalPlayer?.HomeWorld.GameData?.Name.ToString();
         }
 
         public bool Equals(Puppet? other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return this.HomeWorld.Id == other.HomeWorld.Id &&
-                this.Name.TextValue == other.Name.TextValue;
+            return this.HomeWorld == other.HomeWorld &&
+                this.Name == other.Name;
         }
 
         public override bool Equals(object? obj)
@@ -57,7 +56,9 @@ namespace Puppets.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Puppet) obj);
+            return Equals((Puppet)obj);
         }
+
+        public override int GetHashCode() => (this.HomeWorld, Name).GetHashCode();
     }
 }

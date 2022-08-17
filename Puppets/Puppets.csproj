@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Authors>cecilia-sanare</Authors>
-		<Version>1.1.0.2</Version>
+		<Version>1.1.0.4</Version>
 		<Description>Simple emote syncing!</Description>
 		<Copyright></Copyright>
 		<PackageProjectUrl>https://github.com/cecilia-sanare/Puppets</PackageProjectUrl>
@@ -72,8 +72,8 @@
 		<None Remove=".gitignore" />
 		<None Remove="README.md" />
 	</ItemGroup>
-	
-	<Target Name="DalamudLinter" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
-		<DalamudLinter ProjectDir="$(ProjectDir)" ProjectFilePath="$(MSBuildProjectFullPath)" />
-	</Target>
+
+	<ItemGroup>
+	  <None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
 </Project>

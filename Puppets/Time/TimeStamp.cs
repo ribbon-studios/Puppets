@@ -5,6 +5,8 @@ namespace Puppets.Time;
 
 public readonly struct TimeStamp : IComparable<TimeStamp>, IEquatable<TimeStamp>
 {
+    public static string DATE_FORMAT = "dd/MM/yyyy HH:mm:sszzz";
+
     public long Time { get; init; }
 
     public static implicit operator long(TimeStamp ts)
@@ -18,7 +20,7 @@ public readonly struct TimeStamp : IComparable<TimeStamp>, IEquatable<TimeStamp>
         => Time = value;
 
     public TimeStamp(string value)
-        => Time = ((DateTimeOffset)DateTime.ParseExact(value, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture)).ToUnixTimeMilliseconds();
+        => Time = DateTimeOffset.ParseExact(value, DATE_FORMAT, CultureInfo.InvariantCulture).ToUnixTimeMilliseconds();
 
     public static TimeStamp UtcNow
         => new(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
@@ -138,5 +140,5 @@ public readonly struct TimeStamp : IComparable<TimeStamp>, IEquatable<TimeStamp>
         => DateTimeOffset.FromUnixTimeMilliseconds(Time).UtcDateTime;
 
     public override string ToString()
-        => LocalTime.ToString(CultureInfo.InvariantCulture);
+        => DateTime.ToString(DATE_FORMAT, CultureInfo.InvariantCulture);
 }

@@ -1,6 +1,7 @@
 ﻿using ImGuiNET;
 using Puppets.Constants;
 using Puppets.Models;
+using Puppets.SeFunctions;
 using Puppets.Utils;
 using System;
 using System.Numerics;
@@ -50,6 +51,7 @@ namespace Puppets
                 }
 
                 ImGui.Text("Current Owner: " + CharacterUtils.Owner?.ID);
+                ImGui.Text("Server Time: " + SeTime.GetServerTime().ToString());
 
                 var modes = System.Enum.GetNames(typeof(DebugMode));
                 var debugMode = (int)PuppetsPlugin.Configuration.DebugMode;

@@ -17,6 +17,5 @@ namespace Puppets
         {
             PuppetsPlugin.PluginInterface.SavePluginConfig(this);
         }
-
     }
 }

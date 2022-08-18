@@ -11,7 +11,16 @@ namespace Puppets
 
         public bool Enabled { get; set; } = true;
 
-        public DebugMode DebugMode { get; set; } = DebugMode.None;
+        public DebugMode DebugMode { private get; set; } = DebugMode.None;
+
+        public DebugMode GetDebugMode()
+        {
+            #if DEBUG
+            return this.DebugMode;
+            #else
+            return DebugMode.None;
+            #endif
+        }
 
         public void Save()
         {

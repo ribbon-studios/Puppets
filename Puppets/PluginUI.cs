@@ -53,8 +53,9 @@ namespace Puppets
                 ImGui.Text("Current Owner: " + CharacterUtils.Owner?.ID);
                 ImGui.Text("Server Time: " + SeTime.GetServerTime().ToString());
 
+                #if DEBUG
                 var modes = System.Enum.GetNames(typeof(DebugMode));
-                var debugMode = (int)PuppetsPlugin.Configuration.DebugMode;
+                var debugMode = (int)PuppetsPlugin.Configuration.GetDebugMode();
                 if (ImGui.Combo("Debug Mode", ref debugMode, modes, modes.Length))
                 {
                     PuppetsPlugin.Configuration.DebugMode = (DebugMode)debugMode;
@@ -62,7 +63,7 @@ namespace Puppets
                     PuppetsPlugin.Configuration.Save();
                 }
 
-                if (PuppetsPlugin.Configuration.DebugMode is not DebugMode.None)
+                if (PuppetsPlugin.Configuration.GetDebugMode() is not DebugMode.None)
                 {
                     ImGui.Text("Current Player: " + PuppetsPlugin.ClientState.LocalPlayer?.Name);
                     ImGui.Text("Party Length: " + PuppetsPlugin.PartyList.Length);
@@ -76,6 +77,7 @@ namespace Puppets
                         ImGui.Text("[" + i + "]: " + new Puppet(partyMember).ID);
                     }
                 }
+                #endif
             }
             ImGui.End();
         }

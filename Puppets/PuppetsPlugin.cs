@@ -80,9 +80,9 @@ namespace Puppets
             var senderPuppet = new Puppet(ChatUtils.CleanupSender(sender.TextValue));
 
             if (
-                (Configuration.DebugMode is not DebugMode.Echo and not DebugMode.EchoNoEmote && !senderPuppet.Equals(CharacterUtils.Owner)) ||
-                (Configuration.DebugMode is DebugMode.Echo or DebugMode.EchoNoEmote && type != XivChatType.Echo) ||
-                (Configuration.DebugMode is not DebugMode.Echo and not DebugMode.EchoNoEmote && type != XivChatType.Party && type != XivChatType.CrossParty) ||
+                (Configuration.GetDebugMode() is not DebugMode.Echo and not DebugMode.EchoNoEmote && !senderPuppet.Equals(CharacterUtils.Owner)) ||
+                (Configuration.GetDebugMode() is DebugMode.Echo or DebugMode.EchoNoEmote && type != XivChatType.Echo) ||
+                (Configuration.GetDebugMode() is not DebugMode.Echo and not DebugMode.EchoNoEmote && type != XivChatType.Party && type != XivChatType.CrossParty) ||
                 !message.TextValue.StartsWith("[PM] ")
             )
             {
@@ -122,7 +122,7 @@ namespace Puppets
             string[] arguments = ChatUtils.CleanupCommand(args).Split(" ").Where((arg) => arg != "").ToArray();
             var emote = arguments[0];
 
-            if (Configuration.DebugMode is not DebugMode.Echo and not DebugMode.EchoNoEmote && CharacterUtils.IsNotOwner)
+            if (Configuration.GetDebugMode() is not DebugMode.Echo and not DebugMode.EchoNoEmote && CharacterUtils.IsNotOwner)
             {
                 PuppetsPlugin.PluginInterface.UiBuilder.AddNotification("Only a puppet master may execute emotes!", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
             }
@@ -134,7 +134,7 @@ namespace Puppets
             {
                 PuppetsPlugin.PluginInterface.UiBuilder.AddNotification("The provided emote is not unlocked (" + emote + ")", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
             }
-            else if (Configuration.DebugMode is not DebugMode.Echo and not DebugMode.EchoNoEmote && CharacterUtils.NotInParty)
+            else if (Configuration.GetDebugMode() is not DebugMode.Echo and not DebugMode.EchoNoEmote && CharacterUtils.NotInParty)
             {
                 PuppetsPlugin.PluginInterface.UiBuilder.AddNotification("You must be in a party to use puppets!", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
             }
@@ -144,7 +144,7 @@ namespace Puppets
                 var when = SeTime.GetServerTime().AddMilliseconds((long) double.Parse(delay) * 1000);
                 var message = $"[PM] {emote} @ {when}";
 
-                if (Configuration.DebugMode is DebugMode.Echo or DebugMode.EchoNoEmote)
+                if (Configuration.GetDebugMode() is DebugMode.Echo or DebugMode.EchoNoEmote)
                 {
                     this.Common.Functions.Chat.SendMessage($"/e {message}");
                 }
@@ -175,7 +175,7 @@ namespace Puppets
 
                 if (delay > 0) await Task.Delay((int)delay);
 
-                if (Configuration.DebugMode is DebugMode.None or DebugMode.Echo)
+                if (Configuration.GetDebugMode() is DebugMode.None or DebugMode.Echo)
                 {
                     this.Common.Functions.Chat.SendMessage("/" + emote);
                 }

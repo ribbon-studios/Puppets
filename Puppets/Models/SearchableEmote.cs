@@ -33,10 +33,12 @@ namespace Puppets.Models
         {
             if (ReferenceEquals(null, command)) return false;
             if (ReferenceEquals(this, command)) return true;
-            return this.Command.Contains(command) ||
-                this.ShortCommand.Contains(command) ||
-                this.Alias.Contains(command) ||
-                this.ShortAlias.Contains(command);
+
+            var slashCommand = $"/{command}";
+            return this.Command.Equals(slashCommand) ||
+                this.ShortCommand.Equals(slashCommand) ||
+                this.Alias.Equals(slashCommand) ||
+                this.ShortAlias.Equals(slashCommand);
         }
 
         public override bool Equals(object? obj)

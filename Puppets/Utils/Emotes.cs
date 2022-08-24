@@ -20,7 +20,7 @@ namespace Puppets.Utils
             {
                 if (Emotes.__isEmoteUnlocked == null)
                 {
-                    if (PuppetsPlugin.TargetScanner.TryScanText("E9 ?? ?? ?? ?? 8B 13 41 B8", out var emoteUnlockedPtr))
+                    if (PuppetsPlugin.TargetScanner.TryScanText("E8 ?? ?? ?? ?? 84 C0 74 A4", out var emoteUnlockedPtr))
                     {
                         PluginLog.Information($"emoteUnlockedPtr: {emoteUnlockedPtr:X}");
                         Emotes.__isEmoteUnlocked = Marshal.GetDelegateForFunctionPointer<IsEmoteUnlockedDelegate>(emoteUnlockedPtr);
@@ -78,6 +78,7 @@ namespace Puppets.Utils
 
         private static bool isEmoteUnlocked(SearchableEmote emote)
         {
+            PluginLog.Information($"requested emote: {emote.Command}");
             return emote.UnlockLink == 0 || Emotes._isEmoteUnlocked != null && Emotes._isEmoteUnlocked(UIState.Instance(), emote.UnlockLink, 1) > 0;
         }
     }

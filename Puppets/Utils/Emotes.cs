@@ -50,25 +50,28 @@ namespace Puppets.Utils
             }
         }
 
-        private static List<SearchableEmote> UnlockedEmotes => Emotes.ValidEmotes.Where(x => Emotes.isEmoteUnlocked(x)).ToList();
-
-        public static bool isValidEmote(string emote)
+        public static SearchableEmote getEmote(string emote)
         {
-            var lowercaseEmote = emote.ToLower();
+            string lowercaseEmote = emote.ToLower();
 
-            return Emotes.ValidEmotes.Find(searchableEmote => searchableEmote.Equals(lowercaseEmote)) != null;
+            return Emotes.ValidEmotes.Find(searchableEmote => searchableEmote.Equals(lowercaseEmote));
         }
 
-        public static bool isInvalidEmote(string emote)
+        public static bool isValidEmote(string emoteName)
         {
-            return !Emotes.isValidEmote(emote);
+            return Emotes.getEmote(emoteName) != null;
         }
 
-        public static bool isUnlockedEmote(string emote)
+        public static bool isInvalidEmote(string emoteName)
         {
-            var lowercaseEmote = emote.ToLower();
+            return !Emotes.isValidEmote(emoteName);
+        }
 
-            return Emotes.UnlockedEmotes.Find(searchableEmote => searchableEmote.Equals(lowercaseEmote)) != null;
+        public static bool isUnlockedEmote(string emoteName)
+        {
+            SearchableEmote emote = Emotes.getEmote(emoteName);
+
+            return emote != null && Emotes.isEmoteUnlocked(emote);
         }
 
         public static bool isNotUnlockedEmote(string emote)

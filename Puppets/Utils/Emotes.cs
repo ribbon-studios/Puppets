@@ -22,7 +22,7 @@ namespace Puppets.Utils
                 {
                     if (PuppetsPlugin.TargetScanner.TryScanText("E8 ?? ?? ?? ?? 84 C0 74 A4", out var emoteUnlockedPtr))
                     {
-                        PluginLog.Information($"emoteUnlockedPtr: {emoteUnlockedPtr:X}");
+                        PuppetsPlugin.PluginLog.Information($"emoteUnlockedPtr: {emoteUnlockedPtr:X}");
                         Emotes.__isEmoteUnlocked = Marshal.GetDelegateForFunctionPointer<IsEmoteUnlockedDelegate>(emoteUnlockedPtr);
                     }
                 }

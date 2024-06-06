@@ -6,8 +6,11 @@ using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Interface.ImGuiNotification;
+using Dalamud.Interface.Internal.Notifications;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using Puppets.Constants;
 using Puppets.Models;
 using Puppets.SeFunctions;
@@ -27,13 +30,15 @@ namespace Puppets
         private const string PuppetMasterCommand = "/pm";
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-        [PluginService] public static DataManager Data { get; private set; }
-        [PluginService] public static ClientState ClientState { get; private set; }
-        [PluginService] public static PartyList PartyList { get; private set; }
+        [PluginService] public static IDataManager Data { get; private set; }
+        [PluginService] public static IClientState ClientState { get; private set; } 
+        [PluginService] public static IPartyList PartyList { get; private set; }
         [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; }
-        [PluginService] public static CommandManager CommandManager { get; private set; }
-        [PluginService] public static ChatGui ChatGui { get; private set; }
+        [PluginService] public static ICommandManager CommandManager { get; private set; }
+        [PluginService] public static IChatGui ChatGui { get; private set; }
         [PluginService] public static SigScanner TargetScanner { get; private set; }
+        [PluginService] public static IPluginLog PluginLog { get; private set; }
+        [PluginService] public static INotificationManager NotificationManager { get; private set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         private static Configuration? _configuration;
@@ -54,7 +59,7 @@ namespace Puppets
 
         public PuppetsPlugin()
         {
-            this.Common = new XivCommonBase(Hooks.None);
+            this.Common = new XivCommonBase(PluginInterface, Hooks.None);
 
             // you might normally want to embed resources and load them from the manifest stream
             this.PluginUi = new PluginUI();
@@ -123,19 +128,35 @@ namespace Puppets
 
             if (Configuration.GetDebugMode() is not DebugMode.Echo and not DebugMode.EchoNoEmote && CharacterUtils.IsNotOwner)
             {
-                PuppetsPlugin.PluginInterface.UiBuilder.AddNotification("Only a puppet master may execute emotes!", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
+                NotificationManager.AddNotification(new Notification {
+                    Title = "Puppets",
+                    Content = "Only a puppet master may execute emotes!",
+                    Type = NotificationType.Warning
+                });
             }
             else if (Emotes.isInvalidEmote(emote))
             {
-                PuppetsPlugin.PluginInterface.UiBuilder.AddNotification("The provided emote does not exist (" + emote + ")", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Error);
+                NotificationManager.AddNotification(new Notification {
+                    Title = "Puppets",
+                    Content = $"The provided emote does not exist ({emote})",
+                    Type = NotificationType.Error
+                });
             }
             else if (Emotes.isNotUnlockedEmote(emote))
             {
-                PuppetsPlugin.PluginInterface.UiBuilder.AddNotification("The provided emote is not unlocked (" + emote + ")", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
+                NotificationManager.AddNotification(new Notification {
+                    Title = "Puppets",
+                    Content = $"The provided emote is not unlocked ({emote})",
+                    Type = NotificationType.Warning
+                });
             }
             else if (Configuration.GetDebugMode() is not DebugMode.Echo and not DebugMode.EchoNoEmote && CharacterUtils.NotInParty)
             {
-                PuppetsPlugin.PluginInterface.UiBuilder.AddNotification("You must be in a party to use puppets!", "Puppets", Dalamud.Interface.Internal.Notifications.NotificationType.Warning);
+                NotificationManager.AddNotification(new Notification {
+                    Title = "Puppets",
+                    Content = "You must be in a party to use puppets!",
+                    Type = NotificationType.Warning
+                });
             }
             else
             {

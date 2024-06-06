@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Authors>cecilia-sanare</Authors>
-		<Version>1.2.1.3</Version>
+		<Version>1.2.1.4</Version>
 		<Description>Simple emote syncing!</Description>
 		<Copyright></Copyright>
 		<PackageProjectUrl>https://github.com/ribbon-studios/Puppets</PackageProjectUrl>

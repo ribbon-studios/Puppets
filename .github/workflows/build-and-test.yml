@@ -11,7 +11,7 @@ name: build and test
 #     - '**.csproj'
 
 env:
-  DOTNET_VERSION: '5.x.x' # The .NET SDK version to use
+  DOTNET_VERSION: '8.x.x' # The .NET SDK version to use
 
 jobs:
   build-and-test:

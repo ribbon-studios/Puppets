@@ -5,7 +5,7 @@
   default = pkgs.mkShell {
       nativeBuildInputs = with pkgs.buildPackages; [
         nodejs_18
-        dotnet-sdk_8
+        dotnet-sdk_7
       ];
   };
 }

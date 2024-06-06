@@ -11,7 +11,7 @@
     "IconUrl": "https://raw.githubusercontent.com/ribbon-studios/Puppets/main/images/icon.png",
     "RepoUrl": "https://github.com/ribbon-studios/Puppets",
     "ApplicableVersion": "any",
-    "DalamudApiLevel": 7,
+    "DalamudApiLevel": 9,
     "IsHide": "False",
     "IsTestingExclusive": "False",
     "DownloadLinkInstall": "https://github.com/ribbon-studios/Puppets/raw/main/!Dist/latest.zip",

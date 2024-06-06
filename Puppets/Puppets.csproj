@@ -5,8 +5,8 @@
 		<Version>1.2.1.2</Version>
 		<Description>Simple emote syncing!</Description>
 		<Copyright></Copyright>
-		<PackageProjectUrl>https://github.com/cecilia-sanare/Puppets</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/cecilia-sanare/Puppets.git</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ribbon-studios/Puppets</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ribbon-studios/Puppets.git</RepositoryUrl>
 	</PropertyGroup>
 
 	<PropertyGroup>

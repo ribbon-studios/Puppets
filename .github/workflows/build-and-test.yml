@@ -1,14 +1,14 @@
 name: build and test
 
 # TODO: Figure out how to pull Dalamud Assets into GitHub Actions
-# on:
-#   push:
-#     branches: [ main ]
-#   pull_request:
-#     branches: [ main ]
-#     paths:
-#     - '**.cs'
-#     - '**.csproj'
+on:
+  push:
+    branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
+  #   paths:
+  #   - '**.cs'
+  #   - '**.csproj'
 
 env:
   DOTNET_VERSION: '8.x.x' # The .NET SDK version to use

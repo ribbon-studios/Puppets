@@ -7,13 +7,13 @@
   "InternalName": "Puppets",
   "AssemblyVersion": "1.2.1.2",
   "TestingAssemblyVersion": "1.2.1.2",
-  "IconUrl": "https://raw.githubusercontent.com/cecilia-sanare/Puppets/main/images/icon.png",
-  "RepoUrl": "https://github.com/cecilia-sanare/Puppets",
+  "IconUrl": "https://raw.githubusercontent.com/ribbon-studios/Puppets/main/images/icon.png",
+  "RepoUrl": "https://github.com/ribbon-studios/Puppets",
   "ApplicableVersion": "any",
   "DalamudApiLevel": 7,
   "IsHide": "False",
   "IsTestingExclusive": "False",
-  "DownloadLinkInstall": "https://github.com/cecilia-sanare/Puppets/raw/testing/bin/x64/Release/Puppets/latest.zip",
-  "DownloadLinkTesting": "https://github.com/cecilia-sanare/Puppets/raw/testing/bin/x64/Release/Puppets/latest.zip",
-  "DownloadLinkUpdate": "https://github.com/cecilia-sanare/Puppets/raw/testing/bin/x64/Release/Puppets/latest.zip"
+  "DownloadLinkInstall": "https://github.com/ribbon-studios/Puppets/raw/testing/bin/x64/Release/Puppets/latest.zip",
+  "DownloadLinkTesting": "https://github.com/ribbon-studios/Puppets/raw/testing/bin/x64/Release/Puppets/latest.zip",
+  "DownloadLinkUpdate": "https://github.com/ribbon-studios/Puppets/raw/testing/bin/x64/Release/Puppets/latest.zip"
 }

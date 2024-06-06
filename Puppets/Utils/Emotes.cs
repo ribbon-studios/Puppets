@@ -10,27 +10,6 @@ namespace Puppets.Utils
 {
     public static unsafe class Emotes
     {
-        // E8 ?? ?? ?? ?? 84 C0 74 A4
-        private delegate byte IsEmoteUnlockedDelegate(UIState* uiState, uint emoteId, byte unk);
-
-        private static IsEmoteUnlockedDelegate? __isEmoteUnlocked;
-        private static IsEmoteUnlockedDelegate? _isEmoteUnlocked
-        {
-            get
-            {
-                if (Emotes.__isEmoteUnlocked == null)
-                {
-                    if (PuppetsPlugin.TargetScanner.TryScanText("E8 ?? ?? ?? ?? 84 C0 74 A4", out var emoteUnlockedPtr))
-                    {
-                        PuppetsPlugin.PluginLog.Information($"emoteUnlockedPtr: {emoteUnlockedPtr:X}");
-                        Emotes.__isEmoteUnlocked = Marshal.GetDelegateForFunctionPointer<IsEmoteUnlockedDelegate>(emoteUnlockedPtr);
-                    }
-                }
-
-                return Emotes.__isEmoteUnlocked;
-            }
-        }
-
         private static List<SearchableEmote>? _emotes;
         private static List<SearchableEmote> ValidEmotes
         {
@@ -81,8 +60,8 @@ namespace Puppets.Utils
 
         private static bool isEmoteUnlocked(SearchableEmote emote)
         {
-            PluginLog.Information($"requested emote: {emote.Command}");
-            return emote.UnlockLink == 0 || Emotes._isEmoteUnlocked != null && Emotes._isEmoteUnlocked(UIState.Instance(), emote.UnlockLink, 1) > 0;
+            PuppetsPlugin.PluginLog.Information($"requested emote: {emote.Command}");
+            return emote.UnlockLink == 0 || UIState.Instance() -> IsUnlockLinkUnlockedOrQuestCompleted(emote.UnlockLink);
         }
     }
 }

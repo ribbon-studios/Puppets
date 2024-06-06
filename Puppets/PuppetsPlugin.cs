@@ -36,7 +36,6 @@ namespace Puppets
         [PluginService] public static DalamudPluginInterface PluginInterface { get; private set; }
         [PluginService] public static ICommandManager CommandManager { get; private set; }
         [PluginService] public static IChatGui ChatGui { get; private set; }
-        [PluginService] public static SigScanner TargetScanner { get; private set; }
         [PluginService] public static IPluginLog PluginLog { get; private set; }
         [PluginService] public static INotificationManager NotificationManager { get; private set; }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
